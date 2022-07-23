@@ -1,42 +1,26 @@
-import { useState } from "react";
+import useFetch from "../../hooks/use-fetch";
 
 import Section from "../UI/Section";
 import TaskForm from "./TaskForm";
 
 const NewTask = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [isLoading, error, fetchTasks] = useFetch();
 
-  const enterTaskHandler = async (taskText) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        "https://react-http-88257-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json",
-        {
-          method: "POST",
-          body: JSON.stringify({ text: taskText }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Request failed!");
-      }
-
-      const data = await response.json();
-
+  function enterTaskHandler(taskText) {
+    async function onFetchSuccess(data) {
       const generatedId = data.name; // firebase-specific => "name" contains generated id
       const createdTask = { id: generatedId, text: taskText };
 
       props.onAddTask(createdTask);
-    } catch (err) {
-      setError(err.message || "Something went wrong!");
     }
-    setIsLoading(false);
-  };
+
+    fetchTasks(
+      "https://react-http-88257-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json",
+      onFetchSuccess,
+      "POST",
+      { text: taskText }
+    );
+  }
 
   return (
     <Section>

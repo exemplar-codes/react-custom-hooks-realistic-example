@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 import Tasks from "./components/Tasks/Tasks";
 import NewTask from "./components/NewTask/NewTask";
@@ -7,23 +7,22 @@ import useFetch from "./hooks/use-fetch";
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  const onFetchSuccess = useCallback((data) => {
+  const onFetchSuccess = (data) => {
     const loadedTasks = [];
 
     for (const taskKey in data) {
       loadedTasks.push({ id: taskKey, text: data[taskKey].text });
     }
-
     setTasks(loadedTasks);
-  }, []);
+  };
 
-  const [isLoading, error, fetchTasks] = useFetch(
-    "https://react-http-88257-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json",
-    onFetchSuccess
-  );
+  const [isLoading, error, fetchTasks] = useFetch();
 
   useEffect(() => {
-    fetchTasks();
+    fetchTasks(
+      "https://react-http-88257-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json",
+      onFetchSuccess
+    );
   }, [fetchTasks]);
 
   const taskAddHandler = (task) => {
