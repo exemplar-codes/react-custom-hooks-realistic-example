@@ -1,8 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 
-function useFetch(url, onSuccess, onLoad = false, method = "get", payloadBody) {
+function useFetch(url, onSuccess, method = "get", payloadBody) {
   /*
-  onLoad: boolean
   url: string
   onSuccess(json_data)
   method: 'get'/'method'
@@ -43,10 +42,6 @@ function useFetch(url, onSuccess, onLoad = false, method = "get", payloadBody) {
       setIsLoading(false);
     }
   }, [url, onSuccess, method, payloadBody]);
-
-  useEffect(() => {
-    if (onLoad) fetchCore();
-  }, [onLoad, fetchCore]);
 
   return [isLoading, error, fetchCore];
 }

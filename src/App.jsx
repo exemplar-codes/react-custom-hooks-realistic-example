@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import Tasks from "./components/Tasks/Tasks";
 import NewTask from "./components/NewTask/NewTask";
@@ -19,9 +19,12 @@ function App() {
 
   const [isLoading, error, fetchTasks] = useFetch(
     "https://react-http-88257-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json",
-    onFetchSuccess,
-    true
+    onFetchSuccess
   );
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   const taskAddHandler = (task) => {
     setTasks((prevTasks) => prevTasks.concat(task));
